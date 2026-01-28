@@ -1,0 +1,427 @@
+<?php
+session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: index.html");
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Responsive Layout</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- Application Wrapper -->
+<div class="app-wrapper">
+
+    <!-- Header Section -->
+    <header class="app-header">
+        <h1>Admin Dashboard</h1>
+        <p>San Francisco High School Administration Portal</p>
+    </header>
+
+    <!-- Main Container: Two-column on desktop, single column on mobile -->
+    <div class="app-container">
+
+        <!-- ===== LEFT SIDEBAR (Admin Info) ===== -->
+        <aside class="sidebar">
+
+            <!-- Admin Info Card -->
+            <article class="card admin-card">
+                <h2>Administrator</h2>
+                <div class="avatar"><?php echo strtoupper(substr($_SESSION['user'], 0, 1)); ?></div>
+                <div class="admin-info">
+                    <p>
+                        <strong>Name</strong>
+                        <?php echo htmlspecialchars($_SESSION['user']); ?>
+                    </p>
+                    <p>
+                        <strong>Role</strong>
+                        <span class="badge">Admin</span>
+                    </p>
+                    <p>
+                        <strong>Access Level</strong>
+                        Full Control
+                    </p>
+                </div>
+            </article>
+
+            <!-- Admin Stats Card -->
+            <article class="card">
+                <h2>System Stats</h2>
+                <p><strong>Total Requests:</strong> 15</p>
+                <p><strong>Pending:</strong> 3</p>
+                <p><strong>Approved:</strong> 10</p>
+                <p><strong>Rejected:</strong> 2</p>
+                <p><strong>Total Files:</strong> 47</p>
+            </article>
+
+            <!-- Admin Actions Card -->
+            <article class="card">
+                <h2>Admin Actions</h2>
+                <button>View Logs</button>
+                <button class="btn-secondary">Backup Data</button>
+                <button class="btn-secondary">System Settings</button>
+                <button class="btn-reject" onclick="location.href='index2.html'">Logout</button>
+            </article>
+
+        </aside>
+
+        <!-- ===== RIGHT MAIN CONTENT (Admin Functions) ===== -->
+        <main class="main-content">
+
+            <!-- Pending Requests Card -->
+            <article class="card">
+                <h2>Pending Permit Requests</h2>
+                <div id="loading-requests" style="text-align: center; padding: 20px;">Loading pending requests...</div>
+                <div class="table-wrap" id="pending-table-container" style="display: none;">
+                    <table id="pending-requests-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Student Name</th>
+                                <th>Email</th>
+                                <th>Grade</th>
+                                <th>Permit Type</th>
+                                <th>Date</th>
+                                <th>Reason</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-tbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-pending" style="text-align: center; padding: 20px; color: #666; display: none;">
+                    No pending requests at this time.
+                </div>
+            </article>
+
+            <!-- Request History Card -->
+            <article class="card">
+                <h2>Request History (All Requests)</h2>
+                <div id="loading-history" style="text-align: center; padding: 20px;">Loading request history...</div>
+                <div class="table-wrap" id="history-table-container" style="display: none;">
+                    <table id="history-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Student Name</th>
+                                <th>Permit Type</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Admin Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+        </main>
+
+    </div>
+
+</div>
+
+<!-- JavaScript for admin functions -->
+<script>
+    // Configuration - Replace with your Google Apps Script deployment URL
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4nMCOt23NV2Q9cVRAj7qIZSXa-I9Y5UlJmcwiBUflW8NS2mYdjm0sYyv_8woboTrdBQ/exec';
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPendingRequests();
+        loadRequestHistory();
+        // Refresh pending requests every 30 seconds
+        setInterval(loadPendingRequests, 30000);
+    });
+    
+    // Load pending requests
+    function loadPendingRequests() {
+        const requestData = {
+            action: 'getPendingRequests'
+        };
+        
+        fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.requests) {
+                displayPendingRequests(data.requests);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading pending requests:', error);
+        });
+    }
+    
+    // Display pending requests
+    function displayPendingRequests(requests) {
+        const loadingDiv = document.getElementById('loading-requests');
+        const tableContainer = document.getElementById('pending-table-container');
+        const noPendingDiv = document.getElementById('no-pending');
+        const tbody = document.getElementById('pending-tbody');
+        
+        loadingDiv.style.display = 'none';
+        
+        if (!requests || requests.length === 0) {
+            noPendingDiv.style.display = 'block';
+            tableContainer.style.display = 'none';
+            return;
+        }
+        
+        tbody.innerHTML = '';
+        
+        requests.forEach(request => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${request.requestID}</td>
+                <td>${request.fullName}</td>
+                <td>${request.email}</td>
+                <td>${request.gradeSection}</td>
+                <td>${request.permitType}</td>
+                <td>${formatDate(request.date)}</td>
+                <td>${truncateText(request.reason, 30)}</td>
+                <td>
+                    <button class="btn-approve" data-request-id="${request.requestID}" data-email="${request.email}" data-name="${request.fullName}" data-permit="${request.permitType}" style="width: auto; padding: 6px 10px; font-size: 11px; margin-right: 5px;">Approve</button>
+                    <button class="btn-reject" data-request-id="${request.requestID}" data-email="${request.email}" data-name="${request.fullName}" data-permit="${request.permitType}" style="width: auto; padding: 6px 10px; font-size: 11px;">Reject</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        tableContainer.style.display = 'block';
+        
+        // Attach event listeners to buttons
+        document.querySelectorAll('.btn-approve').forEach(btn => {
+            btn.addEventListener('click', approveRequest);
+        });
+        
+        document.querySelectorAll('.btn-reject').forEach(btn => {
+            btn.addEventListener('click', rejectRequest);
+        });
+    }
+    
+    // Approve request
+    function approveRequest(e) {
+        e.preventDefault();
+        const btn = e.target;
+        const requestID = btn.dataset.requestId;
+        const email = btn.dataset.email;
+        const fullName = btn.dataset.name;
+        const permitType = btn.dataset.permit;
+        
+        const remarks = prompt('Enter admin remarks (optional):', 'Request approved');
+        
+        if (remarks === null) return; // User cancelled
+        
+        const requestData = {
+            action: 'approveRequest',
+            requestID: requestID,
+            email: email,
+            fullName: fullName,
+            permitType: permitType,
+            adminRemarks: remarks
+        };
+        
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+        
+        fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Request approved successfully! Email notification sent to ' + fullName);
+                loadPendingRequests();
+                loadRequestHistory();
+            } else {
+                alert('Error approving request: ' + data.message);
+                btn.disabled = false;
+                btn.textContent = 'Approve';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error approving request');
+            btn.disabled = false;
+            btn.textContent = 'Approve';
+        });
+    }
+    
+    // Reject request
+    function rejectRequest(e) {
+        e.preventDefault();
+        const btn = e.target;
+        const requestID = btn.dataset.requestId;
+        const email = btn.dataset.email;
+        const fullName = btn.dataset.name;
+        const permitType = btn.dataset.permit;
+        
+        const remarks = prompt('Enter reason for rejection:', 'Request rejected');
+        
+        if (remarks === null) return; // User cancelled
+        
+        const requestData = {
+            action: 'rejectRequest',
+            requestID: requestID,
+            email: email,
+            fullName: fullName,
+            permitType: permitType,
+            adminRemarks: remarks
+        };
+        
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+        
+        fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Request rejected. Email notification sent to ' + fullName);
+                loadPendingRequests();
+                loadRequestHistory();
+            } else {
+                alert('Error rejecting request: ' + data.message);
+                btn.disabled = false;
+                btn.textContent = 'Reject';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error rejecting request');
+            btn.disabled = false;
+            btn.textContent = 'Reject';
+        });
+    }
+    
+    // Load request history
+    function loadRequestHistory() {
+        const requestData = {
+            action: 'getPendingRequests'
+        };
+        
+        fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.requests) {
+                displayRequestHistory(data.requests);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading history:', error);
+        });
+    }
+    
+    // Display request history
+    function displayRequestHistory(requests) {
+        const loadingDiv = document.getElementById('loading-history');
+        const tableContainer = document.getElementById('history-table-container');
+        const tbody = document.getElementById('history-tbody');
+        
+        if (loadingDiv) loadingDiv.style.display = 'none';
+        
+        if (!requests || requests.length === 0) {
+            if (tableContainer) tableContainer.style.display = 'none';
+            return;
+        }
+        
+        tbody.innerHTML = '';
+        
+        requests.forEach(request => {
+            const row = document.createElement('tr');
+            const statusColor = getStatusColor(request.status);
+            
+            row.innerHTML = `
+                <td>${request.requestID}</td>
+                <td>${request.fullName}</td>
+                <td>${request.permitType}</td>
+                <td>${formatDate(request.date)}</td>
+                <td><span class="status ${statusColor.class}">${request.status}</span></td>
+                <td>${request.adminRemarks || '-'}</td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        if (tableContainer) tableContainer.style.display = 'block';
+    }
+    
+    // Get status color class
+    function getStatusColor(status) {
+        switch(status.toLowerCase()) {
+            case 'approved':
+                return { class: 'approved', color: '#28a745' };
+            case 'rejected':
+                return { class: 'rejected', color: '#dc3545' };
+            case 'pending':
+            default:
+                return { class: 'pending', color: '#ffc107' };
+        }
+    }
+    
+    // Format date
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    
+    // Truncate text
+    function truncateText(text, length) {
+        if (!text) return '-';
+        return text.length > length ? text.substring(0, length) + '...' : text;
+    }
+    
+    console.log('Admin Dashboard loaded successfully');
+</script>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>San Francisco High School</h3>
+                <p>Committed to educational excellence and innovation in student record management.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <div class="footer-links">
+                    <a href="index2.html">Home</a>
+                    <a href="user.html">User Dashboard</a>
+                    <a href="admin.html">Admin Portal</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Feedback & Support</h3>
+                <div class="footer-links">
+                    <a href="feedback.html">Research Questions</a>
+                    <a href="mailto:support@sfhs.edu">Email Support</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 San Francisco High School. All rights reserved. | Digital Registrar Portal</p>
+                <p style="margin-top: 8px; font-size: 12px;">Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page title</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="Header">
+        <img src="assets/SFHS.png" alt="SFHS LOGO">
+        <h3>SAN FRANCISCO HIGH SCHOOL</h3>
+    </div>
+    <div class="body">
+    <div class="container">
+        <div class="form-box active" id="login-form">
+            <form action="login.php" method="post">                
+                <h2 class="h2">Account Login</h2>
+                <input type="text" id="id" name="id" placeholder="User" required>
+                <input type="email" id="email" name="email" placeholder="Email Address " required>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <button type="submit" name="Login">Login</button>
+                <p>Don't have an account? <a href="#" onclick="showForm('register-form')">Register</a></p>
+            </form>
+        </div>
+        
+        <div class="form-box" id="register-form">
+            <form action="https://sheetdb.io/api/v1/ic6l06a883381" method="post" id="sheetdb-form">                
+                <h2 class="h2">Register Account</h2>
+                <input type="text" id="user" name="data[user]" placeholder="User" required>
+                <input type="email" id="email" name="data[email]" placeholder="Email Address " required>
+                <input type="password" id="psw" name="data[password]" placeholder="Enter your password" required>
+                <input type="text" id="role" name="data[role]" value="useraccount"  readonly>
+                            
+                <button type="submit" name="Register">Register</button>
+                <p>Already have an account? <a href="#" onclick="showForm('login-form')">Login</a></p>
+            </form>
+        </div>
+    </div>
+    </div>
+    <script src="js/script.js"></script>
+    <script>
+        var form = document.getElementById('sheetdb-form');
+        form.addEventListener("submit", e => {
+          e.preventDefault();
+          fetch(form.action, {
+              method : "POST",
+              body: new FormData(document.getElementById("sheetdb-form")),
+          }).then(
+              response => response.json()
+          ).then((html) => {
+            // you can put any JS code here
+            window.open('index2.html', '_blank');
+
+          });
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+
+            <div class="footer-section">
+                <h3>San Francisco High School</h3>
+                <p>
+                    Committed to educational excellence and innovation in student record management.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <div class="footer-links">
+                    <a href="index2.html">Home</a>
+                    <a href="user.html">User Dashboard</a>
+                    <a href="admin.html">Admin Portal</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Feedback & Support</h3>
+                <div class="footer-links">
+                    <a href="feedback.html">Research Questions</a>
+                    <a href="mailto:support@sfhs.edu">Email Support</a>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <p>&copy; 2026 San Francisco High School. All rights reserved. | Digital Registrar Portal</p>
+                <p style="margin-top: 8px; font-size: 12px;">Privacy Policy | Terms of Service</p>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>

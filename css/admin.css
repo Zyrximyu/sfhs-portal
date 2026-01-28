@@ -1,0 +1,84 @@
+/* ===== ADMIN DASHBOARD STYLES ===== */
+
+/* ===== ADMIN INFO CARD (Sidebar) ===== */
+.admin-card {
+    text-align: center;
+    background: linear-gradient(135deg, #248120 0%, #1a5f17 100%);
+    color: white;
+    padding: 30px 25px !important;
+}
+
+.admin-card h2 {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 12px;
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 40px;
+    font-weight: 700;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+.admin-info {
+    margin: 15px 0 0 0;
+}
+
+.admin-info p {
+    color: rgba(255, 255, 255, 0.95);
+    margin: 12px 0;
+    font-size: 13px;
+}
+
+.admin-info p strong {
+    display: block;
+    font-size: 11px;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+/* ===== BUTTON VARIANTS ===== */
+.btn-approve {
+    background: #248120;
+}
+
+.btn-approve:hover {
+    background: #1a5f17;
+}
+
+.btn-reject {
+    background: #dc3545;
+}
+
+.btn-reject:hover {
+    background: #c82333;
+}
+
+.btn-upload {
+    background: #0066cc;
+}
+
+.btn-upload:hover {
+    background: #0052a3;
+}
+
+.btn-secondary {
+    background: #666;
+}
+
+.btn-secondary:hover {
+    background: #555;
+}

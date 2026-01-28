@@ -1,0 +1,439 @@
+<?php
+session_start();
+if (!isset($_SESSION['user'])) {
+    header("Location: index.html");
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Responsive Layout</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/user.css">
+</head>
+<body>
+
+<!-- Application Wrapper -->
+<div class="app-wrapper">
+
+    <!-- Header Section -->
+    <header class="app-header">
+        <h1>User Dashboard</h1>
+        <p>San Francisco High School Portal</p>
+    </header>
+
+    <!-- Main Container: Two-column on desktop, single column on mobile -->
+    <div class="app-container">
+
+        <!-- ===== LEFT SIDEBAR (Profile Section) ===== -->
+        <aside class="sidebar">
+
+            <!-- Profile Card -->
+            <article class="card profile-card">
+                <h2>User Profile</h2>
+                <div class="avatar"><?php echo strtoupper(substr($_SESSION['user'], 0, 1)); ?></div>
+                <div class="profile-info">
+                    <p>
+                        <strong>Name</strong>
+                        <?php echo htmlspecialchars($_SESSION['user']); ?>
+                    </p>
+                    <p>
+                        <strong>Role</strong>
+                        <span class="badge">Student</span>
+                    </p>
+                    <p>
+                        <strong>Status</strong>
+                        Active
+                    </p>
+                </div>
+            </article>
+
+            <!-- Quick Stats Card -->
+            <article class="card">
+                <h2>Quick Stats</h2>
+                <p><strong>Permits Requested:</strong> 2</p>
+                <p><strong>Approved:</strong> 1</p>
+                <p><strong>Pending:</strong> 1</p>
+                <p><strong>Account Created:</strong> Jan 15, 2026</p>
+            </article>
+
+            <!-- Account Actions Card -->
+            <article class="card">
+                <h2>Account</h2>
+                <button>Edit Profile</button>
+                <button class="btn-secondary">Change Password</button>
+                <button class="btn-secondary">Settings</button>
+                <button class="btn-danger" onclick="location.href='index2.html'">Logout</button>
+            </article>
+
+        </aside>
+
+        <!-- ===== RIGHT MAIN CONTENT (Dashboard Section) ===== -->
+        <main class="main-content">
+
+            <!-- Request Permit Card -->
+            <article class="card">
+                <h2>Request School Permit</h2>
+                <form id="permit-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName"><strong>Full Name</strong></label>
+                            <input 
+                                type="text" 
+                                id="fullName"
+                                name="fullName"
+                                placeholder="Enter your full name" 
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><strong>Email</strong></label>
+                            <input 
+                                type="email" 
+                                id="email"
+                                name="email"
+                                placeholder="your.email@sfhs.edu" 
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gradeSection"><strong>Grade / Section</strong></label>
+                            <select id="gradeSection" name="gradeSection" required>
+                                <option value="">Select Grade/Section</option>
+                                <option value="9A">Grade 9 - Section A</option>
+                                <option value="9B">Grade 9 - Section B</option>
+                                <option value="10A">Grade 10 - Section A</option>
+                                <option value="10B">Grade 10 - Section B</option>
+                                <option value="11A">Grade 11 - Section A</option>
+                                <option value="11B">Grade 11 - Section B</option>
+                                <option value="12A">Grade 12 - Section A</option>
+                                <option value="12B">Grade 12 - Section B</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="permitType"><strong>Type of Permit</strong></label>
+                            <select id="permitType" name="permitType" required>
+                                <option value="">Select Permit Type</option>
+                                <option value="Medical">Medical</option>
+                                <option value="Family Event">Family Event</option>
+                                <option value="Emergency">Emergency</option>
+                                <option value="Work">Work</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="permitDate"><strong>Date of Absence</strong></label>
+                            <input 
+                                type="date" 
+                                id="permitDate"
+                                name="permitDate"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="reason"><strong>Reason for Request</strong></label>
+                        <textarea 
+                            id="reason"
+                            name="reason"
+                            placeholder="Please provide detailed reason for your permit request" 
+                            rows="4"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submit-btn">Submit Request</button>
+                        <button type="reset" class="btn-secondary">Clear Form</button>
+                    </div>
+
+                    <div id="form-message" style="display: none; margin-top: 15px; padding: 12px; border-radius: 4px; text-align: center; font-weight: 600;"></div>
+                </form>
+            </article>
+
+            <!-- My Requests History Card -->
+            <article class="card">
+                <h2>My Permit Requests</h2>
+                <div id="loading-history" style="text-align: center; padding: 20px;">Loading requests...</div>
+                <div class="table-wrap" id="requests-table-container" style="display: none;">
+                    <table id="requests-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Permit Type</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requests-tbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-requests" style="text-align: center; padding: 20px; color: #666; display: none;">
+                    No permit requests found. Submit one above to get started!
+                </div>
+            </article>
+
+            <!-- Notifications Card -->
+            <article class="card">
+                <h2>Notifications</h2>
+                <p><strong>Request Approved</strong></p>
+                <p style="color: #666; font-size: 13px; margin: 5px 0 15px 0;">
+                    Your permit for Sep 15–16 has been approved.
+                </p>
+                <p><strong>Pending Review</strong></p>
+                <p style="color: #666; font-size: 13px; margin: 5px 0;">
+                    Your medical permit request is being reviewed by administration.
+                </p>
+            </article>
+
+            <!-- Important Information Card -->
+            <article class="card">
+                <h2>Important Information</h2>
+                <h3>Permit Guidelines</h3>
+                <p>• Submit permits at least 3 days in advance</p>
+                <p>• Include valid documentation for medical absences</p>
+                <p>• Administrative review takes 1-2 business days</p>
+                <h3 style="margin-top: 15px;">Contact Support</h3>
+                <p>Email: permits@sfhs.edu</p>
+                <p>Phone: (555) 123-4567</p>
+            </article>
+
+        </main>
+
+    </div>
+
+</div>
+
+<!-- JavaScript for interactivity -->
+<script>
+    // Configuration - Replace with your Google Apps Script deployment URL
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4nMCOt23NV2Q9cVRAj7qIZSXa-I9Y5UlJmcwiBUflW8NS2mYdjm0sYyv_8woboTrdBQ/exec';
+    
+    // Get user email from session or form
+    let userEmail = '';
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadUserRequests();
+    });
+    
+    // Handle permit form submission
+    document.getElementById('permit-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const gradeSection = document.getElementById('gradeSection').value;
+        const permitType = document.getElementById('permitType').value;
+        const permitDate = document.getElementById('permitDate').value;
+        const reason = document.getElementById('reason').value;
+        
+        userEmail = email;
+        
+        // Validate all fields
+        if (!fullName || !email || !gradeSection || !permitType || !permitDate || !reason) {
+            showMessage('Please fill in all required fields.', 'error');
+            return;
+        }
+        
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        
+        // Send request to Google Apps Script
+        const requestData = {
+            action: 'submitRequest',
+            fullName: fullName,
+            email: email,
+            gradeSection: gradeSection,
+            permitType: permitType,
+            reason: reason,
+            date: permitDate
+        };
+        
+        fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage('Your request has been submitted successfully! Your request ID is: ' + data.requestID + '. You will receive an email confirmation shortly.', 'success');
+                document.getElementById('permit-form').reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Request';
+                
+                // Reload requests after a delay
+                setTimeout(loadUserRequests, 2000);
+            } else {
+                showMessage('Error submitting request: ' + data.message, 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Request';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('Error submitting request. Please try again.', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Request';
+        });
+    });
+    
+    // Show form message
+    function showMessage(message, type) {
+        const messageDiv = document.getElementById('form-message');
+        messageDiv.textContent = message;
+        messageDiv.style.display = 'block';
+        messageDiv.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+        messageDiv.style.color = type === 'success' ? '#155724' : '#721c24';
+        messageDiv.style.border = '1px solid ' + (type === 'success' ? '#c3e6cb' : '#f5c6cb');
+        
+        if (type === 'success') {
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+    
+    // Load user's permit requests
+    function loadUserRequests() {
+        const email = document.getElementById('email').value || userEmail;
+        
+        if (!email) {
+            // If no email, try to get from form if it's filled
+            const formEmail = document.getElementById('email').value;
+            if (!formEmail) {
+                return;
+            }
+        }
+        
+        const requestData = {
+            action: 'getUserRequests',
+            email: email || document.getElementById('email').value
+        };
+        
+        fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.requests) {
+                displayUserRequests(data.requests);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading requests:', error);
+        });
+    }
+    
+    // Display user requests in table
+    function displayUserRequests(requests) {
+        const loadingDiv = document.getElementById('loading-history');
+        const tableContainer = document.getElementById('requests-table-container');
+        const noRequestsDiv = document.getElementById('no-requests');
+        const tbody = document.getElementById('requests-tbody');
+        
+        loadingDiv.style.display = 'none';
+        
+        if (!requests || requests.length === 0) {
+            noRequestsDiv.style.display = 'block';
+            tableContainer.style.display = 'none';
+            return;
+        }
+        
+        tbody.innerHTML = '';
+        
+        requests.forEach(request => {
+            const row = document.createElement('tr');
+            const statusColor = getStatusColor(request.status);
+            
+            row.innerHTML = `
+                <td>${request.requestID}</td>
+                <td>${request.permitType}</td>
+                <td>${formatDate(request.date)}</td>
+                <td><span class="status ${statusColor.class}">${request.status}</span></td>
+                <td>${request.adminRemarks || '-'}</td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+        
+        tableContainer.style.display = 'block';
+    }
+    
+    // Get status color class
+    function getStatusColor(status) {
+        switch(status.toLowerCase()) {
+            case 'approved':
+                return { class: 'approved', color: '#28a745' };
+            case 'rejected':
+                return { class: 'rejected', color: '#dc3545' };
+            case 'pending':
+            default:
+                return { class: 'pending', color: '#ffc107' };
+        }
+    }
+    
+    // Format date
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    
+    console.log('User Dashboard loaded successfully');
+</script>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+
+            <div class="footer-section">
+                <h3>San Francisco High School</h3>
+                <p>
+                    Committed to educational excellence and innovation in student record management.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <div class="footer-links">
+                    <a href="index2.html">Home</a>
+                    <a href="user.html">User Dashboard</a>
+                    <a href="admin.html">Admin Portal</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Feedback & Support</h3>
+                <div class="footer-links">
+                    <a href="feedback.html">Research Questions</a>
+                    <a href="mailto:support@sfhs.edu">Email Support</a>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <p>&copy; 2026 San Francisco High School. All rights reserved. | Digital Registrar Portal</p>
+                <p style="margin-top: 8px; font-size: 12px;">Privacy Policy | Terms of Service</p>
+            </div>
+
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>

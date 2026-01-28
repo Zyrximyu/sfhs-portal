@@ -1,0 +1,180 @@
+/* ===== USER DASHBOARD STYLES ===== */
+
+/* ===== PROFILE CARD SPECIFIC ===== */
+.profile-card {
+    text-align: center;
+    background: linear-gradient(135deg, #248120 0%, #1a5f17 100%);
+    color: white;
+}
+
+.profile-card h2 {
+    color: white;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 36px;
+    font-weight: 700;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+.profile-info {
+    margin: 15px 0 0 0;
+}
+
+.profile-info p {
+    color: rgba(255, 255, 255, 0.95);
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.profile-info p strong {
+    display: block;
+    font-size: 12px;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+/* ===== BUTTON VARIANTS ===== */
+.btn-secondary {
+    background: #666;
+}
+
+.btn-secondary:hover {
+    background: #555;
+}
+
+.btn-danger {
+    background: #dc3545;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+/* ===== PERMIT FORM STYLES ===== */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row.single {
+    grid-template-columns: 1fr;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #248120;
+    box-shadow: 0 0 0 3px rgba(36, 129, 32, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-actions button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.form-actions button[type="submit"] {
+    background: #248120;
+    color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+    background: #1a5f17;
+}
+
+.form-actions button[type="reset"] {
+    background: #e9ecef;
+    color: #333;
+}
+
+.form-actions button[type="reset"]:hover {
+    background: #dee2e6;
+}
+
+/* ===== STATUS BADGE STYLES ===== */
+.status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status.approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status.rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

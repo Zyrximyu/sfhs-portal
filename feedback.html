@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Feedback & Research Questions - San Francisco High School</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/feedback.css">
+</head>
+<body>
+
+<!-- Application Wrapper -->
+<div class="app-wrapper">
+
+    <!-- Header Section -->
+    <header class="app-header">
+        <h1>User Feedback & Research Survey</h1>
+        <p>San Francisco High School - Digital Registrar Portal Feedback</p>
+    </header>
+
+    <!-- Main Container -->
+    <div class="app-container">
+
+        <!-- Main Content -->
+        <main class="feedback-main">
+
+            <!-- Survey Introduction Card -->
+            <article class="survey-card survey-intro">
+                <h2>Help Us Improve Our Digital Registrar Portal</h2>
+                <p class="intro-text">
+                    Your feedback is valuable to us. This brief survey collects your experiences and observations 
+                    regarding the Digital Registrar Portal. Your responses will help us understand how the portal 
+                    has impacted student record management and administrative efficiency at San Francisco High School. 
+                    This survey is for research and improvement purposes and is completely confidential.
+                </p>
+                <p style="color: #666; font-size: 13px; margin-top: 15px;">
+                    <strong>Estimated time to complete:</strong> 3-5 minutes
+                </p>
+            </article>
+
+            <!-- Survey Form -->
+            <form id="survey-form" class="survey-form" action="https://sheetdb.io/api/v1/immusw3uldyly" method="post">
+
+                <!-- Question 1 -->
+                <article class="survey-card">
+                    <h3 class="question-title">Question 1</h3>
+                    <p class="question-text">
+                        How did the Digital Registrar Portal affect the speed of retrieving student records?
+                    </p>
+                    <div class="form-group">
+                        <label class="radio-option">
+                            <input type="radio" name="data[speed]" value="significantly_improved" required>
+                            <span class="radio-label">Significantly improved - records are retrieved much faster</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="data[speed]" value="moderately_improved" required>
+                            <span class="radio-label">Moderately improved - some time savings noticed</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="data[speed]" value="no_change" required>
+                            <span class="radio-label">No significant change - speed remained about the same</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="data[speed]" value="slower" required>
+                            <span class="radio-label">Slower - the portal makes retrieval more time-consuming</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="data[speed]" value="unable_to_assess" required>
+                            <span class="radio-label">Unable to assess or not applicable</span>
+                        </label>
+                    </div>
+                </article>
+
+                <!-- Question 2 -->
+                <article class="survey-card">
+                    <h3 class="question-title">Question 2</h3>
+                    <p class="question-text">
+                        How did the portal help improve the accuracy and organization of student records?
+                    </p>
+                    <div class="form-group">
+                        <label class="radio-option">
+                            <input type="radio" name="data[accuracy]" value="significantly_improved" required>
+                            <span class="radio-label">Significantly improved - records are now highly accurate and well-organized</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="data[accuracy]" value="moderately_improved" required>
+                            <span class="radio-label">Moderately improved - some improvements in accuracy and organization</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="data[accuracy]" value="no_change" required>
+                            <span class="radio-label">No significant change - accuracy and organization remained similar</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="data[accuracy]" value="declined" required>
+                            <span class="radio-label">Declined - accuracy or organization became worse</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="data[accuracy]" value="unable_to_assess" required>
+                            <span class="radio-label">Unable to assess or not applicable</span>
+                        </label>
+                    </div>
+                </article>
+
+                <!-- Question 3 -->
+                <article class="survey-card">
+                    <h3 class="question-title">Question 3</h3>
+                    <p class="question-text">
+                        In what ways did the Digital Registrar Portal help administrators and teachers manage records more efficiently?
+                    </p>
+                    <div class="form-group">
+                        <p style="color: #555; font-size: 13px; margin-bottom: 12px;">
+                            <strong>Please check all that apply:</strong>
+                        </p>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="data[efficiency]" value="reduced_paperwork">
+                            <span class="checkbox-label">Reduced paperwork and manual data entry</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="data[efficiency]" value="better_search">
+                            <span class="checkbox-label">Better search capabilities and faster access to information</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="data[efficiency]" value="fewer_errors">
+                            <span class="checkbox-label">Fewer data entry errors and inconsistencies</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="data[efficiency]" value="better_collaboration">
+                            <span class="checkbox-label">Improved collaboration between teachers and administrators</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="data[efficiency]" value="time_management">
+                            <span class="checkbox-label">More time to focus on other important tasks</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="data[efficiency]" value="real_time_updates">
+                            <span class="checkbox-label">Real-time updates and better data synchronization</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="data[efficiency]" value="no_improvement">
+                            <span class="checkbox-label">No improvement in efficiency</span>
+                        </label>
+                    </div>
+                </article>
+
+                <!-- Additional Comments -->
+                <article class="survey-card">
+                    <h3 class="question-title">Additional Comments</h3>
+                    <p class="question-text">
+                        Please share any additional feedback, suggestions, or concerns about the Digital Registrar Portal:
+                    </p>
+                    <div class="form-group">
+                        <textarea 
+                            id="comments" 
+                            name="data[comments]" 
+                            placeholder="Enter your comments here (optional)..."
+                            rows="5"
+                            class="survey-textarea"
+                        ></textarea>
+                    </div>
+                </article>
+
+                <!-- Survey Actions -->
+                <div class="survey-actions">
+                    <button type="submit" class="btn-submit">Submit Feedback</button>
+                    <a href="javascript:history.back()" class="btn-back">Go Back</a>
+                </div>
+
+                <!-- Hidden field to store combined efficiency values -->
+                <input type="hidden" id="efficiency_combined" name="data[efficiency]" value="">
+
+            </form>
+
+            <!-- Thank You Message (Hidden by default) -->
+            <div id="thank-you" class="thank-you-message" style="display: none;">
+                <article class="survey-card">
+                    <h2>Thank You!</h2>
+                    <p>
+                        Your feedback has been submitted successfully. We greatly appreciate your time and valuable insights. 
+                        Your responses will help us continue to improve the Digital Registrar Portal for the entire San Francisco High School community.
+                    </p>
+                    <a href="javascript:history.back()" class="btn-back" style="display: inline-block; margin-top: 15px;">
+                        Go Back
+                    </a>
+                </article>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+
+            <div class="footer-section">
+                <h3>San Francisco High School</h3>
+                <p>
+                    Committed to educational excellence and innovation in student record management.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <div class="footer-links">
+                    <a href="index2.html">Home</a>
+                    <a href="user.html">Dashboard</a>
+                    <a href="admin.html">Admin Portal</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Feedback</h3>
+                <div class="footer-links">
+                    <a href="feedback.html">Research Questions</a>
+                    <a href="mailto:feedback@sfhs.edu">Email Support</a>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <p>&copy; 2026 San Francisco High School. All rights reserved. | Digital Registrar Portal</p>
+                <p style="margin-top: 8px; font-size: 12px;">Privacy Policy | Terms of Service</p>
+            </div>
+
+        </div>
+    </footer>
+
+</div>survey
+
+<script>
+    // Form submission handler - Send to Google Sheets via SheetDB API
+    var form = document.getElementById('survey-form');
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+        
+        // Get all checked efficiency checkboxes and combine them
+        var efficiencyCheckboxes = document.querySelectorAll('input[name="data[efficiency]"]:checked');
+        var efficiencyValues = [];
+        efficiencyCheckboxes.forEach(function(checkbox) {
+            efficiencyValues.push(checkbox.value);
+        });
+        
+        // Set the hidden field with combined values (comma-separated)
+        document.getElementById('efficiency_combined').value = efficiencyValues.join(', ');
+        
+        // Remove the individual checkboxes from form data by removing their name attribute temporarily
+        efficiencyCheckboxes.forEach(function(checkbox) {
+            checkbox.removeAttribute('name');
+        });
+        
+        fetch(form.action, {
+            method: "POST",
+            body: new FormData(document.getElementById("survey-form")),
+        }).then(
+            response => response.json()
+        ).then((html) => {
+            // Reload the same page like index2.html does
+            window.open('feedback.html', '_blank');
+        });
+    });
+</script>
+
+</body>
+</html>
